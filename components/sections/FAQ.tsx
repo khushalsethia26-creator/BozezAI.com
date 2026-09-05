@@ -17,7 +17,7 @@ export default function FAQ() {
     <Section id="faq">
       <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <div>
-          <Eyebrow>11 · QUESTIONS</Eyebrow>
+          <Eyebrow>09 · QUESTIONS</Eyebrow>
           <div className="mt-12">
             <KineticHeading
               lines={["Straight", "answers,", "up front."]}

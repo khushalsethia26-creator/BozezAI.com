@@ -53,6 +53,16 @@ export default function SmoothScroll() {
     // trigger start/end positions accurate.
     const refreshId = requestAnimationFrame(() => ScrollTrigger.refresh());
 
+    // Belt-and-suspenders: recompute once every image (including large
+    // client-logo assets) has actually loaded and the window has settled
+    // to its real size. Percentage-based end values (e.g. "+=160%") are
+    // resolved against window.innerHeight at refresh time — if that ever
+    // fires while the tab is 0x0 (backgrounded/not yet composited), the
+    // pin distance would be calculated wrong and stay wrong until the
+    // next refresh. This guarantees at least one more, later.
+    const onLoad = () => ScrollTrigger.refresh();
+    window.addEventListener("load", onLoad);
+
     const onClick = (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement)?.closest?.(
         'a[href^="#"]'
@@ -70,6 +80,7 @@ export default function SmoothScroll() {
 
     return () => {
       document.removeEventListener("click", onClick);
+      window.removeEventListener("load", onLoad);
       cancelAnimationFrame(refreshId);
       gsap.ticker.remove(tick);
       lenis.destroy();

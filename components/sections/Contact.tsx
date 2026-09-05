@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Phone, Check } from "lucide-react";
+import { Mail, Check } from "lucide-react";
 import { contact } from "@/lib/content";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { KineticHeading } from "@/components/ui/KineticHeading";
@@ -66,24 +66,21 @@ export default function Contact() {
 
           <Reveal delay={0.22}>
             <a
-              href={contact.phone.href}
+              href={contact.email.href}
               className="group mt-10 flex items-center gap-4 rounded-2xl border border-line bg-paper p-5 transition-colors duration-500 hover:border-line-strong hover:bg-paper"
             >
               <span className="grid size-11 shrink-0 place-items-center rounded-full bg-blue-soft">
-                <Phone className="size-4.5 text-blue" aria-hidden="true" />
+                <Mail className="size-4.5 text-blue" aria-hidden="true" />
               </span>
               <span>
                 <span className="block text-[10px] tracking-[0.18em] text-ink-faint uppercase">
-                  {contact.phone.note}
+                  {contact.email.note}
                 </span>
                 <span className="type-display mt-1 block text-[19px] font-medium text-ink">
-                  {contact.phone.label}
+                  {contact.email.label}
                 </span>
               </span>
             </a>
-            <p className="mt-3 text-[10px] tracking-[0.12em] text-ink-faint uppercase">
-              Placeholder — swap in the real number
-            </p>
           </Reveal>
         </div>
 

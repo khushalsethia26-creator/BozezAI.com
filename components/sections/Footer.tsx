@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { brand, footerNav, contact } from "@/lib/content";
+import { brand, footerNav } from "@/lib/content";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -47,13 +47,6 @@ export default function Footer() {
             <p className="mt-6 max-w-[34ch] text-[15px] leading-relaxed text-ink-dim">
               {brand.meaning}
             </p>
-
-            <a
-              href={contact.phone.href}
-              className="mt-5 inline-flex min-h-[44px] items-center text-[13px] text-ink-dim transition-colors duration-300 hover:text-ink"
-            >
-              {contact.phone.label}
-            </a>
           </div>
 
           {/* Services */}

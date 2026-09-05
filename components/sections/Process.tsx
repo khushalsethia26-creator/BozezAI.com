@@ -1,26 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useSpring, useReducedMotion } from "motion/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { process } from "@/lib/content";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { KineticHeading } from "@/components/ui/KineticHeading";
-import { StoneMark } from "@/components/ui/Props";
 
-/**
- * Second pin+scrub moment. Rather than force the 5 steps into a
- * full-pin absolute-stack (fragile if step copy ever runs to different
- * lengths), the StoneMark graphic pins via plain CSS `sticky` — no
- * jank risk, no spacer math — while GSAP scrubs its rotation/scale in
- * exact sync with how far the visitor has scrolled through the step
- * list. The vertical spine (below) still fills via a separate
- * Motion-driven scrub, unrelated to this GSAP timeline.
- */
 export default function Process() {
   const listRef = useRef<HTMLDivElement>(null);
-  const markRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
@@ -33,60 +20,16 @@ export default function Process() {
     restDelta: 0.001,
   });
 
-  useEffect(() => {
-    if (reduced) return;
-    const list = listRef.current;
-    const mark = markRef.current;
-    if (!list || !mark) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const tween = gsap.fromTo(
-        mark,
-        { rotate: -6, scale: 0.94 },
-        {
-          rotate: 6,
-          scale: 1.04,
-          ease: "none",
-          scrollTrigger: {
-            trigger: list,
-            start: "top 80%",
-            end: "bottom 40%",
-            scrub: 0.6,
-          },
-        }
-      );
-      return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
-    });
-
-    return () => mm.revert();
-  }, [reduced]);
-
   return (
     <Section id="process">
-      <div className="grid gap-12 lg:grid-cols-[1fr_0.7fr] lg:items-start lg:gap-20">
-        <div>
-          <Eyebrow>{process.eyebrow}</Eyebrow>
-          <div className="mt-12">
-            <KineticHeading
-              lines={process.headlineLines}
-              as="h2"
-              className="text-[clamp(2.4rem,5.6vw,4.6rem)] font-semibold text-ink"
-              accentIndex={3}
-            />
-          </div>
-        </div>
-
-        <div className="hidden lg:sticky lg:top-32 lg:block">
-          <div ref={markRef} className="ml-auto w-full max-w-[240px] will-change-transform">
-            <StoneMark className="w-full" />
-          </div>
-        </div>
+      <Eyebrow>{process.eyebrow}</Eyebrow>
+      <div className="mt-12">
+        <KineticHeading
+          lines={process.headlineLines}
+          as="h2"
+          className="text-[clamp(2.4rem,5.6vw,4.6rem)] font-semibold text-ink"
+          accentIndex={3}
+        />
       </div>
 
       <div ref={listRef} className="relative mt-20 pl-10 md:pl-16">

@@ -1,12 +1,15 @@
 "use client";
 
+import { ArrowUpRight } from "lucide-react";
 import { portfolio } from "@/lib/content";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
-import { BrowserProp, ReelProp, AppProp } from "@/components/ui/Props";
+import { ReelProp, PeaklySiteProp } from "@/components/ui/Props";
+import { VideoCard } from "@/components/ui/VideoCard";
+import { AppShowcase } from "@/components/ui/AppShowcase";
 
-const props = { browser: BrowserProp, reel: ReelProp, app: AppProp } as const;
+const props = { reel: ReelProp, peaklySite: PeaklySiteProp } as const;
 
 export default function Portfolio() {
   return (
@@ -26,15 +29,27 @@ export default function Portfolio() {
         </Reveal>
       </div>
 
-      <RevealGroup className="mt-20 grid gap-6 md:grid-cols-3" stagger={0.12}>
+      <RevealGroup className="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" stagger={0.12}>
         {portfolio.items.map((item) => {
-          const Prop = props[item.prop as keyof typeof props];
+          const isVideo = item.prop === "video";
+          const isAppShowcase = item.prop === "appShowcase";
+          const Prop =
+            isVideo || isAppShowcase ? null : props[item.prop as keyof typeof props];
           return (
             <RevealItem key={item.id}>
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-paper transition-colors duration-500 hover:border-line-strong hover:bg-paper">
                 <div className="flex justify-center overflow-hidden bg-sand/50 p-7">
                   <div className="w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]">
-                    <Prop className="w-full" />
+                    {isVideo && (
+                      <VideoCard src={"videoSrc" in item ? item.videoSrc : ""} className="w-full" />
+                    )}
+                    {isAppShowcase && (
+                      <AppShowcase
+                        src={"imageSrc" in item ? item.imageSrc : ""}
+                        className="w-full"
+                      />
+                    )}
+                    {Prop && <Prop className="w-full" />}
                   </div>
                 </div>
 
@@ -53,6 +68,18 @@ export default function Portfolio() {
                   <p className="mt-4 text-[15px] leading-relaxed text-ink-dim">
                     {item.description}
                   </p>
+
+                  {"href" in item && (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-flex items-center gap-1 text-[13px] font-medium text-blue-deep transition-colors duration-300 hover:text-blue"
+                    >
+                      {"linkLabel" in item ? item.linkLabel : "View live"}
+                      <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                    </a>
+                  )}
                 </div>
               </article>
             </RevealItem>

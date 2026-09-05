@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { Play, Search, Bot, Check, X } from "lucide-react";
+import { Play, Search, Bot, Check, X, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ================================================================
@@ -76,6 +76,68 @@ export function BrowserProp({ className }: { className?: string }) {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------ PEAKLY SITE (real) */
+/* Recreates the actual peakly.in hero — a browser chrome around the real
+   WhatsApp mockup and headline from the live site — rather than a
+   screenshot, so it stays crisp and on-brand like every other prop here. */
+
+export function PeaklySiteProp({ className }: { className?: string }) {
+  return (
+    <div className={cn(frame, className)}>
+      <div className="flex items-center gap-2 border-b border-line bg-sand/60 px-4 py-3">
+        <span className="size-2.5 rounded-full bg-ink/15" />
+        <span className="size-2.5 rounded-full bg-ink/15" />
+        <span className="size-2.5 rounded-full bg-ink/15" />
+        <div className="ml-3 flex-1 rounded-md bg-paper px-3 py-1.5">
+          <span className="text-[10px] text-ink-faint">peakly.in</span>
+        </div>
+      </div>
+      <div className="space-y-4 p-5">
+        <div className="rounded-2xl border border-line bg-sand/40 p-3.5">
+          <div className="flex items-center gap-2">
+            <div className="grid size-7 place-items-center rounded-full bg-gold-soft">
+              <span className="type-eyebrow text-gold-deep">R</span>
+            </div>
+            <span className="text-[12px] font-semibold text-ink">Rekha (Cook)</span>
+            <span className="ml-auto flex items-center gap-1.5">
+              <span className="size-1.5 rounded-full bg-gold" />
+              <span className="type-eyebrow text-ink-faint">Online</span>
+            </span>
+          </div>
+
+          <div className="mt-3 max-w-[85%] rounded-2xl rounded-bl-sm border border-line bg-paper px-3.5 py-2.5">
+            <div className="flex items-center gap-2.5">
+              <div className="grid size-6 shrink-0 place-items-center rounded-full bg-ink">
+                <Mic className="size-3 text-paper" aria-hidden="true" />
+              </div>
+              <div className="flex flex-1 items-center gap-0.5">
+                {[3, 6, 4, 8, 5, 7, 3].map((h, i) => (
+                  <span
+                    key={i}
+                    className="w-0.5 rounded-full bg-ink/25"
+                    style={{ height: `${h * 2}px` }}
+                  />
+                ))}
+              </div>
+              <span className="text-[10px] text-ink-faint">0:23</span>
+            </div>
+            <p className="type-eyebrow mt-2 text-ink-faint">
+              Peakly · 30 min before arrival
+            </p>
+          </div>
+          <p className="mt-2 pl-1 text-[12px] text-ink-dim">Aaj: Rajma Chawal</p>
+        </div>
+
+        <div>
+          <div className="h-2.5 w-4/5 rounded-full bg-ink/70" />
+          <div className="mt-2 h-2.5 w-3/5 rounded-full bg-ink/70" />
+        </div>
+        <div className="h-8 w-32 rounded-full bg-ink" />
       </div>
     </div>
   );
@@ -332,50 +394,6 @@ export function QuoteProp({ className }: { className?: string }) {
         </div>
       </div>
     </div>
-  );
-}
-
-/* ------------------------------------------------- FOUNDATION MARK */
-
-/** Abstract stone/foundation motif — the brand metaphor, drawn not imaged. */
-export function StoneMark({ className }: { className?: string }) {
-  const reduced = useReducedMotion();
-  return (
-    <svg viewBox="0 0 200 200" className={className} aria-hidden="true" fill="none">
-      <defs>
-        <linearGradient id="stone-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="var(--color-gold)" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="var(--color-ink)" stopOpacity="0.55" />
-        </linearGradient>
-      </defs>
-      {[0, 1, 2].map((i) => (
-        <motion.rect
-          key={i}
-          x={30 + i * 10}
-          y={132 - i * 34}
-          width={140 - i * 20}
-          height={26}
-          rx={5}
-          stroke="url(#stone-g)"
-          strokeWidth="1.4"
-          fill="none"
-          initial={reduced ? undefined : { opacity: 0, y: -14 }}
-          whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, delay: i * 0.14, ease: [0.16, 1, 0.3, 1] }}
-        />
-      ))}
-      <motion.circle
-        cx="100"
-        cy="44"
-        r="7"
-        fill="var(--color-gold)"
-        initial={reduced ? undefined : { scale: 0, opacity: 0 }}
-        whileInView={reduced ? undefined : { scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      />
-    </svg>
   );
 }
 

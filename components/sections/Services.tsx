@@ -24,7 +24,7 @@ const props = {
 export default function Services() {
   return (
     <Section id="services">
-      <Eyebrow>04 · SERVICES</Eyebrow>
+      <Eyebrow>03 · SERVICES</Eyebrow>
 
       <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-end lg:gap-20">
         <KineticHeading
@@ -49,8 +49,9 @@ export default function Services() {
           return (
             <Reveal key={s.id} amount={0.15}>
               <article
+                id={`service-${s.id}`}
                 className={cn(
-                  "group relative grid items-center gap-10 overflow-hidden rounded-3xl border border-line bg-paper p-7 transition-colors duration-500 md:p-10 lg:grid-cols-2 lg:gap-16",
+                  "group relative scroll-mt-28 grid items-center gap-10 overflow-hidden rounded-3xl border border-line bg-paper p-7 transition-colors duration-500 md:p-10 lg:grid-cols-2 lg:gap-16",
                   "hover:border-line-strong hover:bg-paper"
                 )}
               >

@@ -41,48 +41,59 @@ export default function Hero() {
     gsap.registerPlugin(ScrollTrigger);
     const mm = gsap.matchMedia();
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const [l1, l2, l3] = lines as HTMLSpanElement[];
+    mm.add(
+      {
+        isMobile: "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+        isDesktop: "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
+      },
+      (context) => {
+        const { isMobile } = context.conditions as { isMobile: boolean };
+        const [l1, l2, l3] = lines as HTMLSpanElement[];
 
-      // Stage the lines on top of one another. Height is pinned to the
-      // tallest line so the layout doesn't collapse once they're
-      // absolutely positioned — measured after the plain stacked
-      // layout has already painted, so this is the real rendered size.
-      const maxH = Math.max(...lines.map((l) => l!.getBoundingClientRect().height));
-      const stage = l1.parentElement!;
-      gsap.set(stage, { position: "relative", height: maxH });
-      gsap.set([l1, l2, l3], { position: "absolute", inset: 0 });
-      gsap.set([l2, l3], { opacity: 0, y: 40 });
-      // l1 starts fully visible, not animated in: Hero is the very first
-      // section, so its ScrollTrigger ("top top") is already live at
-      // scrollY 0 — there's no pre-pin moment for a separate entrance
-      // tween to play during. A second tween touching l1's opacity here
-      // raced the scrub timeline below and both lost (rendered opacity 0).
-      gsap.set(l1, { opacity: 1, y: 0 });
+        // Stage the lines on top of one another. Height is pinned to the
+        // tallest line so the layout doesn't collapse once they're
+        // absolutely positioned — measured after the plain stacked
+        // layout has already painted, so this is the real rendered size.
+        const maxH = Math.max(...lines.map((l) => l!.getBoundingClientRect().height));
+        const stage = l1.parentElement!;
+        gsap.set(stage, { position: "relative", height: maxH });
+        gsap.set([l1, l2, l3], { position: "absolute", inset: 0 });
+        gsap.set([l2, l3], { opacity: 0, y: 40 });
+        // l1 starts fully visible, not animated in: Hero is the very first
+        // section, so its ScrollTrigger ("top top") is already live at
+        // scrollY 0 — there's no pre-pin moment for a separate entrance
+        // tween to play during. A second tween touching l1's opacity here
+        // raced the scrub timeline below and both lost (rendered opacity 0).
+        gsap.set(l1, { opacity: 1, y: 0 });
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=160%",
-          pin: true,
-          scrub: 0.6,
-          anticipatePin: 1,
-        },
-      });
+        // Same 160% pin distance reads fine on desktop (mouse-wheel scroll
+        // covers it fast) but costs a phone several thumb-flicks just to
+        // watch three lines fade — shortened on touch widths so the whole
+        // cycle completes in roughly one screen-height of scroll.
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: isMobile ? "+=90%" : "+=160%",
+            pin: true,
+            scrub: 0.6,
+            anticipatePin: 1,
+          },
+        });
 
-      tl.to(l1, { opacity: 0, y: -30, duration: 1 })
-        .fromTo(l2, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1 }, "<")
-        .to({}, { duration: 0.5 }) // hold
-        .to(l2, { opacity: 0, y: -30, duration: 1 })
-        .fromTo(l3, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1 }, "<")
-        .to({}, { duration: 0.6 }); // hold before release
+        tl.to(l1, { opacity: 0, y: -30, duration: 1 })
+          .fromTo(l2, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1 }, "<")
+          .to({}, { duration: 0.5 }) // hold
+          .to(l2, { opacity: 0, y: -30, duration: 1 })
+          .fromTo(l3, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1 }, "<")
+          .to({}, { duration: 0.6 }); // hold before release
 
-      return () => {
-        tl.scrollTrigger?.kill();
-        tl.kill();
-      };
-    });
+        return () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+        };
+      }
+    );
 
     return () => mm.revert();
   }, [reduced]);

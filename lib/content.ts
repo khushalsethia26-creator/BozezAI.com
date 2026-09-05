@@ -43,16 +43,6 @@ export const trustBadges = [
   { label: "Revisions included", icon: "sparkles" },
 ] as const;
 
-/* --------------------------------------------------------- INTRO VIDEO */
-
-export const introVideo = {
-  eyebrow: "02 · SEE IT FIRST",
-  caption: "This video? We made it.",
-  captionRest: "It's exactly what we'd make for you.",
-  sub: "Sixty seconds, produced with the same AI process we'd use on your business. No crew. No studio. No three-week wait.",
-  runtime: "0:60",
-} as const;
-
 /* ------------------------------------------------------- SECTORS MARQUEE */
 
 export const sectors = [
@@ -70,10 +60,26 @@ export const sectors = [
   "PROFESSIONAL SERVICES",
 ] as const;
 
+/* ---------------------------------------------------------- CLIENT LOGOS */
+/* Real, named clients — permission implicit in supplying their own logo
+   assets directly for display (doc §2's "named" path, not anonymised). */
+
+export const clientLogos = [
+  { name: "Adishwar Edifice", file: "adishwar-edifice.png" },
+  { name: "VKM Constructions", file: "vkm-constructions.png" },
+  { name: "Nakoda Steel Palace", file: "nakoda-steel-palace.png" },
+  { name: "Avana Boutique Hotel", file: "avana-boutique-hotel.png" },
+  { name: "Bharadia Textiles", file: "bharadia-textiles.png" },
+  { name: "India Granite", file: "india-granite.png" },
+  { name: "Rakesh Textiles", file: "rakesh-textiles.png" },
+  { name: "Rekha Textiles", file: "rekha-textiles.png" },
+  { name: "Peakly", file: "peakly.webp" },
+] as const;
+
 /* ----------------------------------------------------------- THE GAP */
 
 export const gap = {
-  eyebrow: "03 · THE GAP",
+  eyebrow: "02 · THE GAP",
   headlineLines: ["Still stitching", "it together", "from four", "vendors?"] as const,
   sub: "A site that doesn't convert. No video presence. An app you've never had time to scope. That's the gap we close.",
   items: [
@@ -118,7 +124,7 @@ export const services = [
     ],
     cta: "Get a Website Quote",
     prop: "browser",
-    href: "/services/websites",
+    href: "#service-websites",
   },
   {
     id: "videos",
@@ -136,7 +142,7 @@ export const services = [
     ],
     cta: "Get a Video Quote",
     prop: "reel",
-    href: "/services/ai-marketing-videos",
+    href: "#service-videos",
   },
   {
     id: "apps",
@@ -154,7 +160,7 @@ export const services = [
     ],
     cta: "Get an App Quote",
     prop: "app",
-    href: "/services/apps",
+    href: "#service-apps",
   },
   {
     id: "bots",
@@ -172,14 +178,14 @@ export const services = [
     ],
     cta: "Get a Bot Quote",
     prop: "chat",
-    href: "/services/bots",
+    href: "#service-bots",
   },
 ] as const;
 
 /* --------------------------------------------------------- WHY BOZEZ */
 
 export const whyBozez = {
-  eyebrow: "05 · WHY BOZEZ",
+  eyebrow: "04 · WHY BOZEZ",
   headlineLines: ["Why small", "businesses", "choose us."] as const,
   items: [
     {
@@ -218,7 +224,7 @@ export const whyBozez = {
 /* ---------------------------------------------------------- PROCESS */
 
 export const process = {
-  eyebrow: "06 · HOW WE WORK",
+  eyebrow: "05 · HOW WE WORK",
   headlineLines: ["From idea", "to online", "in five steps."] as const,
   steps: [
     {
@@ -254,7 +260,7 @@ export const process = {
    routes to a custom quote. So this sells the process, not a number. */
 
 export const scoping = {
-  eyebrow: "07 · SCOPE & QUOTE",
+  eyebrow: "06 · SCOPE & QUOTE",
   headlineLines: ["No packages.", "No padding.", "One clear number."] as const,
   sub: "We don't publish price lists, because we've never built the same thing twice. Here's how your number gets made.",
   steps: [
@@ -278,60 +284,61 @@ export const scoping = {
   cta: { label: "Get Your Free Business Audit", href: "#contact" },
 } as const;
 
-/* --------------------------------------------------- FOUNDING OFFER */
-
-export const founding = {
-  eyebrow: "08 · FOUNDING CLIENTS",
-  headline: "We're taking on our first founding clients.",
-  body: "Early clients get founding pricing and direct, hands-on attention — rates you won't see once we're at full capacity.",
-  perks: [
-    "Founding pricing, locked for the life of the project",
-    "Direct line to the people doing the work",
-    "Priority scheduling on your build",
-    "Support rates fixed at founding level",
-  ],
-  urgency: "Limited founding spots.",
-  cta: { label: "Claim a Founding Spot", href: "#contact" },
-} as const;
-
 /* --------------------------------------------------------- PORTFOLIO */
 /* `named: false` → client did not consent to being named. Show the work,
    describe the sector generically, never invent a name or logo. */
 
 export const portfolio = {
-  eyebrow: "09 · RECENT WORK",
+  eyebrow: "07 · RECENT WORK",
   headline: "A look at recent work.",
-  sub: "Real projects, real results. As we take on more founding clients, this keeps growing.",
+  sub: "Real projects, real results. As we take on more clients, this keeps growing.",
   items: [
     {
-      id: "retail-video",
-      named: false,
-      client: "Local retail business",
-      title: "AI marketing video campaign",
+      id: "peakly-reel-1",
+      named: true,
+      client: "Peakly",
+      title: "Relatable morning reel",
       description:
-        "Short-form social videos built to put a physical storefront in front of people searching nearby.",
+        "A short-form AI-generated reel built for everyday relatability — the kind of scroll-stopping content that earns saves and shares.",
       discipline: "AI Marketing Video",
-      prop: "reel",
+      prop: "video",
+      videoSrc: "/media/ai-video-sample-1.mp4",
     },
     {
-      id: "services-site",
-      named: false,
-      client: "Service business",
-      title: "Lead-generation website",
+      id: "peakly-reel-2",
+      named: true,
+      client: "Peakly",
+      title: "AI-generated social reel",
       description:
-        "A fast, mobile-first site rebuilt around one goal: turn a visitor into a booked enquiry.",
+        "Another example of the same fast, AI-accelerated production process — built for the scroll, not a studio budget.",
+      discipline: "AI Marketing Video",
+      prop: "video",
+      videoSrc: "/media/ai-video-sample-2.mp4",
+    },
+    {
+      id: "peakly-site",
+      named: true,
+      client: "Peakly",
+      title: "Product landing page",
+      description:
+        "A live landing page for the same app — its hero shows exactly what Peakly does: your cook gets the day's menu and recipe on WhatsApp, automatically.",
       discipline: "Website",
-      prop: "browser",
+      prop: "peaklySite",
+      href: "https://peakly.in",
+      linkLabel: "Visit peakly.in",
     },
     {
-      id: "ops-app",
-      named: false,
-      client: "Operations-led business",
-      title: "Internal operations app",
+      id: "peakly-app",
+      named: true,
+      client: "Peakly",
+      title: "Swipe-to-decide meal app",
       description:
-        "A mobile tool replacing a paper-and-spreadsheet workflow, built around how the team already works.",
+        "A live app on the Play Store that kills “kya banega aaj” decision fatigue — swipe dishes, build a weekly menu, and get an auto-generated grocery list.",
       discipline: "App",
-      prop: "app",
+      prop: "appShowcase",
+      imageSrc: "/media/peakly-app-swipe-screen.webp",
+      href: "https://play.google.com/store/apps/details?id=com.foodtinder.food_tinder_app",
+      linkLabel: "View on Play Store",
     },
   ],
   cta: { label: "Want results like these? Book a Free Call", href: "#contact" },
@@ -340,7 +347,7 @@ export const portfolio = {
 /* --------------------------------------------------------- GUARANTEE */
 
 export const guarantee = {
-  eyebrow: "10 · OUR PROMISE",
+  eyebrow: "08 · OUR PROMISE",
   headlineLines: ["We don't", "call it done", "until you do."] as const,
   body: "Revisions are included, not billed as extras. No long-term contract. And you're not left alone after launch.",
   marquee: [
@@ -383,11 +390,10 @@ export const faqs = [
 /* ----------------------------------------------------------- CONTACT */
 
 export const contact = {
-  eyebrow: "12 · GET STARTED",
+  eyebrow: "10 · GET STARTED",
   headlineLines: ["Tell us what's", "slowing you", "down."] as const,
   sub: "Book a free call, or send a few details. We'll come back with next steps — including a free audit of your current site or marketing.",
-  /** Placeholder — replace with the real number before launch. */
-  phone: { label: "+00 000 000 0000", href: "tel:+000000000000", note: "Phone / WhatsApp" },
+  email: { label: "hello@bozezAI.com", href: "mailto:hello@bozezAI.com", note: "Email" },
   submitLabel: "Send & Book My Free Audit",
   interests: ["Website", "AI Marketing Video", "App", "Bot", "Not sure yet"],
   situations: [
@@ -425,8 +431,8 @@ export const nav = [
 export const footerNav = {
   services: services.map((s) => ({ label: s.title, href: s.href })),
   company: [
-    { label: "About", href: "/about" },
-    { label: "Portfolio", href: "/portfolio" },
+    { label: "About", href: "#why" },
+    { label: "Portfolio", href: "#work" },
     { label: "Contact", href: "#contact" },
     { label: "Blog", href: "/blog", soon: true },
   ],
