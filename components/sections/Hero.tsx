@@ -1,9 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, Zap, Unlock, Store, Sparkles } from "lucide-react";
 import { hero, trustBadges } from "@/lib/content";
 import { Button } from "@/components/ui/Button";
@@ -11,97 +8,12 @@ import { cn } from "@/lib/utils";
 
 const icons = { zap: Zap, unlock: Unlock, store: Store, sparkles: Sparkles };
 
-/**
- * THE hero moment (see globals.css .text-gradient-blue comment) —
- * the section pins in place while the three headline lines cycle
- * through in sync with scroll position, Apple's signature technique.
- *
- * Motion (framer-style) owns the eyebrow/sub/CTA/badges — those play
- * once on mount, same as every other section. GSAP owns ONLY the three
- * headline lines, because mixing two animation libraries' writes on the
- * same DOM nodes (Motion's transform + GSAP's position/opacity) is the
- * kind of thing that silently fights itself. One library per element.
- *
- * Reduced motion: the lines render as plain stacked text, no pin, no
- * GSAP involvement at all — matchMedia below never creates the
- * ScrollTrigger in that case, so there's no risk of trapping scroll
- * in a pinned section that never releases.
- */
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const reduced = useReducedMotion();
-
-  useEffect(() => {
-    if (reduced) return;
-    const section = sectionRef.current;
-    const lines = lineRefs.current;
-    if (!section || lines.some((l) => !l)) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-    const mm = gsap.matchMedia();
-
-    mm.add(
-      {
-        isMobile: "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
-        isDesktop: "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
-      },
-      (context) => {
-        const { isMobile } = context.conditions as { isMobile: boolean };
-        const [l1, l2, l3] = lines as HTMLSpanElement[];
-
-        // Stage the lines on top of one another. Height is pinned to the
-        // tallest line so the layout doesn't collapse once they're
-        // absolutely positioned — measured after the plain stacked
-        // layout has already painted, so this is the real rendered size.
-        const maxH = Math.max(...lines.map((l) => l!.getBoundingClientRect().height));
-        const stage = l1.parentElement!;
-        gsap.set(stage, { position: "relative", height: maxH });
-        gsap.set([l1, l2, l3], { position: "absolute", inset: 0 });
-        gsap.set([l2, l3], { opacity: 0, y: 40 });
-        // l1 starts fully visible, not animated in: Hero is the very first
-        // section, so its ScrollTrigger ("top top") is already live at
-        // scrollY 0 — there's no pre-pin moment for a separate entrance
-        // tween to play during. A second tween touching l1's opacity here
-        // raced the scrub timeline below and both lost (rendered opacity 0).
-        gsap.set(l1, { opacity: 1, y: 0 });
-
-        // Same 160% pin distance reads fine on desktop (mouse-wheel scroll
-        // covers it fast) but costs a phone several thumb-flicks just to
-        // watch three lines fade — shortened on touch widths so the whole
-        // cycle completes in roughly one screen-height of scroll.
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: isMobile ? "+=90%" : "+=160%",
-            pin: true,
-            scrub: 0.6,
-            anticipatePin: 1,
-          },
-        });
-
-        tl.to(l1, { opacity: 0, y: -30, duration: 1 })
-          .fromTo(l2, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1 }, "<")
-          .to({}, { duration: 0.5 }) // hold
-          .to(l2, { opacity: 0, y: -30, duration: 1 })
-          .fromTo(l3, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1 }, "<")
-          .to({}, { duration: 0.6 }); // hold before release
-
-        return () => {
-          tl.scrollTrigger?.kill();
-          tl.kill();
-        };
-      }
-    );
-
-    return () => mm.revert();
-  }, [reduced]);
 
   return (
     <section
       id="top"
-      ref={sectionRef}
       className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-6 pt-28 pb-16 md:px-10 lg:px-14"
     >
       {/* ---- Ambient field ---- */}
@@ -153,42 +65,20 @@ export default function Hero() {
           <span className="type-eyebrow text-gold-deep">{hero.eyebrow}</span>
         </motion.div>
 
-        {/* ---- Headline ---- */}
-        {reduced ? (
-          <h1 className="type-display max-w-[14ch] text-[clamp(2.9rem,8.4vw,7.5rem)] font-semibold text-ink">
-            {hero.headlineLines.map((l, i) => (
-              <span
-                key={l}
-                className={cn(
-                  "block",
-                  i === hero.headlineLines.length - 1 && "text-gradient-blue"
-                )}
-              >
-                {l}
-              </span>
-            ))}
-          </h1>
-        ) : (
-          <h1 className="type-display max-w-[14ch] text-[clamp(2.9rem,8.4vw,7.5rem)] font-semibold text-ink">
-            {/* Stacked by default (before GSAP measures + stages them) —
-                this is also what a slow/failed JS load leaves visible. */}
-            {hero.headlineLines.map((l, i) => (
-              <span
-                key={l}
-                ref={(el) => {
-                  lineRefs.current[i] = el;
-                }}
-                data-reveal
-                className={cn(
-                  "block will-change-transform",
-                  i === hero.headlineLines.length - 1 && "text-gradient-blue"
-                )}
-              >
-                {l}
-              </span>
-            ))}
-          </h1>
-        )}
+        {/* ---- Headline — all three lines shown at once, no cycling ---- */}
+        <h1 className="type-display max-w-[14ch] text-[clamp(2.9rem,8.4vw,7.5rem)] font-semibold text-ink">
+          {hero.headlineLines.map((l, i) => (
+            <span
+              key={l}
+              className={cn(
+                "block",
+                i === hero.headlineLines.length - 1 && "text-gradient-blue"
+              )}
+            >
+              {l}
+            </span>
+          ))}
+        </h1>
 
         {/* ---- Sub + CTAs ---- */}
         <motion.div
