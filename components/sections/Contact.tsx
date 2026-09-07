@@ -19,6 +19,7 @@ const labelCls = "mb-2 block text-[13px] font-medium text-ink-dim";
 export default function Contact() {
   const [interests, setInterests] = useState<string[]>([]);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const toggle = (v: string) =>
@@ -26,20 +27,32 @@ export default function Contact() {
       cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v]
     );
 
-  /**
-   * NOT WIRED TO A BACKEND YET.
-   * Replace with a real handler (Formspree / Resend / a route handler)
-   * before launch — right now this only shows the success state.
-   */
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     if (!data.get("name") || !data.get("email")) {
       setError("Please add your name and email so we can reach you.");
       return;
     }
+
     setError(null);
-    setSent(true);
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(data)),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || "Something went wrong. Please try again.");
+      }
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -219,14 +232,15 @@ export default function Contact() {
               )}
 
               <div className="mt-9">
-                <Button type="submit" magnetic={false} className="w-full sm:w-auto">
-                  {contact.submitLabel}
+                <Button
+                  type="submit"
+                  magnetic={false}
+                  disabled={submitting}
+                  className="w-full sm:w-auto"
+                >
+                  {submitting ? "Sending…" : contact.submitLabel}
                 </Button>
               </div>
-
-              <p className="mt-5 text-[10px] leading-relaxed tracking-[0.1em] text-ink-faint uppercase">
-                Demo only — form is not connected to a backend yet
-              </p>
             </form>
           )}
         </Reveal>

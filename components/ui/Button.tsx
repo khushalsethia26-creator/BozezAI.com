@@ -37,6 +37,7 @@ export function Button({
   magnetic = true,
   type,
   onClick,
+  disabled,
 }: {
   href?: string;
   children: React.ReactNode;
@@ -46,6 +47,7 @@ export function Button({
   magnetic?: boolean;
   type?: "button" | "submit";
   onClick?: () => void;
+  disabled?: boolean;
 }) {
   const inner = (
     <>
@@ -59,14 +61,14 @@ export function Button({
     </>
   );
 
-  const cls = cn(base, variants[variant], className);
+  const cls = cn(base, variants[variant], disabled && "cursor-not-allowed opacity-60", className);
 
   const el = href ? (
     <Link href={href} className={cls}>
       {inner}
     </Link>
   ) : (
-    <button type={type ?? "button"} onClick={onClick} className={cls}>
+    <button type={type ?? "button"} onClick={onClick} disabled={disabled} className={cls}>
       {inner}
     </button>
   );
