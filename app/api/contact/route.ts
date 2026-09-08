@@ -2,15 +2,17 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 /**
- * Sends the contact form to hello@bozezAI.com via Resend.
+ * Sends the contact form via Resend.
  *
  * Needs RESEND_API_KEY set as an environment variable (Vercel project
  * settings, and .env.local for local dev) — never hardcode it here.
- * Until the bozezai.com domain is verified in Resend, mail sends from
- * Resend's shared onboarding@resend.dev address; verify the domain in
- * the Resend dashboard and switch CONTACT_FROM below once that's done.
+ * Sending from Resend's shared onboarding@resend.dev address, which only
+ * delivers to the email the Resend account was signed up with — hence
+ * CONTACT_TO below, not hello@bozezAI.com (no inbox there yet). Once the
+ * bozezai.com domain is verified in Resend and hello@ has a real inbox,
+ * switch both CONTACT_TO and CONTACT_FROM over.
  */
-const CONTACT_TO = "hello@bozezAI.com";
+const CONTACT_TO = "khushalsethia26@gmail.com";
 const CONTACT_FROM = "Bozez Website <onboarding@resend.dev>";
 
 export async function POST(request: Request) {
